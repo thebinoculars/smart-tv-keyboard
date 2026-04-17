@@ -1,0 +1,262 @@
+/* TV Keyboard Styles - Optimized for Smart TV */
+
+.smart-tv-keyboard {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  box-sizing: border-box;
+}
+
+.smart-tv-keyboard *,
+.smart-tv-keyboard *::before,
+.smart-tv-keyboard *::after {
+  box-sizing: inherit;
+}
+
+/* Modal Mode */
+.smart-tv-keyboard.tvk-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+}
+
+.smart-tv-keyboard.tvk-modal.visible {
+  display: flex;
+}
+
+.tvk-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* Inline Mode */
+.smart-tv-keyboard.tvk-inline {
+  display: inline-block;
+  position: relative;
+}
+
+.smart-tv-keyboard.tvk-inline.visible {
+  display: inline-block;
+}
+
+.smart-tv-keyboard.tvk-inline .tvk-keyboard-inner {
+  position: relative;
+}
+
+/* Keyboard Inner */
+.tvk-keyboard-inner {
+  position: relative;
+  z-index: 1;
+  background: #2d2d2d;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  min-width: 600px;
+}
+
+/* Rows Container */
+.tvk-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Row */
+.tvk-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+/* Keys */
+.tvk-key {
+  flex: 1;
+  min-width: 48px;
+  height: 56px;
+  border: none;
+  border-radius: 8px;
+  background: #404040;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  text-transform: none;
+  user-select: none;
+  outline: none;
+  position: relative;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+.tvk-key:hover {
+  background: #4a4a4a;
+}
+
+.tvk-key.focused {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.tvk-key.active {
+  background: #505050;
+  transform: scale(0.95);
+}
+
+.tvk-key.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.tvk-key.hidden {
+  visibility: hidden;
+}
+
+/* Special Keys */
+.tvk-key[data-action="shift"],
+.tvk-key[data-action="symbol"] {
+  background: #525252;
+  font-size: 14px;
+}
+
+.tvk-key[data-action="shift"].active-shift {
+  background: #2196f3;
+}
+
+.tvk-key[data-action="enter"] {
+  background: #4caf50;
+  font-size: 14px;
+}
+
+.tvk-key[data-action="enter"]:hover {
+  background: #45a049;
+}
+
+.tvk-key[data-action="space"] {
+  flex: 5;
+  font-size: 14px;
+}
+
+.tvk-key[data-action="backspace"] {
+  background: #f44336;
+  font-size: 20px;
+}
+
+.tvk-key[data-action="backspace"]:hover {
+  background: #da190b;
+}
+
+.tvk-key[data-action="close"] {
+  background: #757575;
+  font-size: 16px;
+}
+
+.tvk-key[data-action="clear"] {
+  background: #ff9800;
+  font-size: 14px;
+}
+
+/* Light Theme */
+.smart-tv-keyboard[data-theme="light"] .tvk-keyboard-inner {
+  background: #f5f5f5;
+}
+
+.smart-tv-keyboard[data-theme="light"] .tvk-key {
+  background: #e0e0e0;
+  color: #333333;
+}
+
+.smart-tv-keyboard[data-theme="light"] .tvk-key:hover {
+  background: #d0d0d0;
+}
+
+.smart-tv-keyboard[data-theme="light"] .tvk-key.active {
+  background: #c0c0c0;
+}
+
+.smart-tv-keyboard[data-theme="light"] .tvk-key[data-action="shift"],
+.smart-tv-keyboard[data-theme="light"] .tvk-key[data-action="symbol"] {
+  background: #d0d0d0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tvk-keyboard-inner {
+    min-width: auto;
+    width: 100%;
+    padding: 12px;
+  }
+
+  .tvk-key {
+    min-width: 36px;
+    height: 48px;
+    font-size: 16px;
+  }
+
+  .tvk-row {
+    gap: 4px;
+  }
+
+  .tvk-rows {
+    gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tvk-key {
+    min-width: 32px;
+    height: 44px;
+    font-size: 14px;
+    padding: 0 8px;
+  }
+
+  .tvk-keyboard-inner {
+    padding: 8px;
+  }
+}
+
+/* Focus Animation */
+@keyframes tvk-pulse {
+  0% {
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  70% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.tvk-key.focused {
+  animation: tvk-pulse 2s infinite;
+}
+
+/* Active Animation */
+@keyframes tvk-press {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.tvk-key.active {
+  animation: tvk-press 0.15s ease;
+}

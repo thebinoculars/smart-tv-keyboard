@@ -1,0 +1,29 @@
+{
+  "name": "smart-tv-keyboard",
+  "version": "2.0.1",
+  "description": "Virtual keyboard optimized for Smart TV with spatial navigation",
+  "main": "dist/smart-tv-keyboard.js",
+  "module": "dist/smart-tv-keyboard.esm.js",
+  "types": "dist/smart-tv-keyboard.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10"
+  },
+  "keywords": [
+    "keyboard",
+    "virtual-keyboard",
+    "smart-tv",
+    "spatial-navigation",
+    "tv-remote",
+    "javascript"
+  ],
+  "license": "MIT"
+}

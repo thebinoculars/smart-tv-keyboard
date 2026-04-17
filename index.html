@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart TV Keyboard</title>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #1a1a2e;
+      color: #fff;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1a1a2e;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #667eea;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a78bfa;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 40px 30px;
+    }
+
+    .demo-layout {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 40px;
+      align-items: start;
+      height: calc(100vh - 40px);
+    }
+
+    .main-content {
+      overflow-y: auto;
+      max-height: calc(100vh - 40px);
+      padding-right: 10px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      max-height: calc(100vh - 40px);
+      gap: 20px;
+    }
+
+    .sidebar .section {
+      margin-bottom: 0;
+      padding: 25px;
+    }
+
+    .sidebar .section h3 {
+      font-size: 1.2rem;
+      margin-bottom: 18px;
+    }
+
+    .sidebar .api-table {
+      font-size: 0.9rem;
+    }
+
+    .sidebar .api-table td {
+      padding: 10px 8px;
+    }
+
+    .main-content .section {
+      margin-bottom: 0;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    @media (max-width: 1000px) {
+      .demo-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: static;
+      }
+      .container {
+        padding: 20px;
+      }
+    }
+
+    .section {
+      background: #252542;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      color: #a78bfa;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .demo-selector-wrapper {
+      margin-bottom: 25px;
+    }
+
+    .demo-selector-wrapper h1 {
+      color: #a78bfa;
+      margin-bottom: 14px;
+      font-size: 2rem;
+    }
+
+    .demo-select {
+      padding: 12px 20px;
+      font-size: 1rem;
+      background: #1e1e3f;
+      color: #fff;
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      cursor: pointer;
+      min-width: 250px;
+      width: 100%;
+    }
+
+    .demo-select:focus {
+      outline: none;
+      border-color: #a78bfa;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: #a0a0c0;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #3d3d6b;
+      border-radius: 8px;
+      background: #151530;
+      color: #fff;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      background: #667eea;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.5);
+      border: 2px solid #a78bfa;
+    }
+
+    .btn.focused {
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.5), 0 0 20px rgba(167, 139, 250, 0.4);
+      border: 2px solid #a78bfa;
+      transform: scale(1.02);
+    }
+
+    .code-block {
+      background: #0d0d1a;
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+
+    .code-block code {
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 0.9rem;
+      color: #a5b3ce;
+      white-space: pre;
+      display: block;
+    }
+
+    .api-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    .api-table th,
+    .api-table td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid #3d3d6b;
+    }
+
+    .api-table th {
+      color: #c4b5fd;
+      font-weight: 600;
+    }
+
+    .api-table code {
+      background: #3d3d6b;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+
+    .spatial-around-keyboard {
+      display: grid;
+      grid-template-columns: 100px 1fr 100px;
+      grid-template-rows: 80px auto 80px;
+      gap: 15px;
+      align-items: start;
+      justify-items: center;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .keyboard-host-box {
+      grid-column: 2;
+      grid-row: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .keyboard-host-box .smart-tv-keyboard {
+      position: relative !important;
+      margin: auto;
+    }
+
+    .corner-element {
+      width: 100px;
+      height: 60px;
+      background: #3d3d6b;
+      border: 2px solid #667eea;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+
+    .corner-element:hover {
+      background: #4a4a7a;
+      transform: scale(1.05);
+    }
+
+    .corner-element.focused {
+      border-color: #f44336;
+      box-shadow: 0 0 20px rgba(244, 67, 54, 0.6);
+      background: #4a3a5a;
+    }
+
+    .corner-element span {
+      font-size: 1.5rem;
+      color: #a78bfa;
+    }
+
+    .corner-element small {
+      font-size: 0.75rem;
+      color: #a0a0c0;
+    }
+
+    #corner-top { grid-column: 2; grid-row: 1; align-self: end; }
+    #corner-bottom { grid-column: 2; grid-row: 3; align-self: start; }
+    #corner-left { grid-column: 1; grid-row: 2; align-self: center; }
+    #corner-right { grid-column: 3; grid-row: 2; align-self: center; }
+
+    @media (max-width: 768px) {
+      .spatial-grid {
+        grid-template-columns: 80px 1fr 80px;
+      }
+      .corner-element {
+        width: 70px;
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" style="padding-top: 20px;">
+    <div class="demo-layout">
+      <main class="main-content">
+        <section class="section demo-area">
+          <div class="demo-selector-wrapper">
+            <h1>Smart TV Keyboard</h1>
+            <select id="demo-selector" class="demo-select" onchange="switchDemo(this.value)">
+              <option value="basic">1. Basic QWERTY</option>
+              <option value="modal">2. Modal Keyboard</option>
+              <option value="numpad">3. PIN Numpad (Max 6)</option>
+              <option value="validation">4. Validation (Disable Keys)</option>
+              <option value="custom">5. Custom Gamepad</option>
+              <option value="spatial">6. Spatial Navigation</option>
+            </select>
+          </div>
+          <div id="basic-demo" class="demo-panel" style="display: block;">
+            <h2>📦 Basic QWERTY Keyboard</h2>
+            <div class="input-group">
+              <label>Text Input</label>
+              <input type="text" id="basic-input" placeholder="Type here..." readonly>
+            </div>
+          </div>
+
+          <div id="numpad-demo" class="demo-panel" style="display: none;">
+            <h2>🔢 PIN Numpad (Max 6 digits)</h2>
+            <div class="input-group">
+              <label>PIN Code</label>
+              <input type="text" id="numpad-input" placeholder="Enter 6-digit PIN..." readonly>
+            </div>
+          </div>
+
+          <div id="custom-demo" class="demo-panel" style="display: none;">
+            <h2>🎮 Custom Gamepad Layout</h2>
+            <div class="input-group">
+              <label>Game Code</label>
+              <input type="text" id="custom-input" placeholder="Use gamepad buttons..." readonly>
+            </div>
+          </div>
+
+          <div id="validation-demo" class="demo-panel" style="display: none;">
+            <h2>🚫 Validation (Disabled Keys at Max)</h2>
+            <div class="input-group">
+              <label>Promo Code (Max 5 chars)</label>
+              <input type="text" id="validation-input" placeholder="Type max 5 chars..." readonly>
+            </div>
+            <p id="validation-status" style="margin-top: 10px; color: #a0a0c0;">0/5 chars</p>
+          </div>
+
+          <div id="modal-demo" class="demo-panel" style="display: none;">
+            <h2>🎯 Modal Keyboard</h2>
+            <div class="input-group">
+              <label>Click button to open modal</label>
+              <input type="text" id="modal-input" placeholder="Modal will appear..." readonly>
+            </div>
+            <button id="modal-open-btn" class="btn" onclick="openModalDemo()" style="margin-top: 15px;" tabindex="0">Open Modal Keyboard</button>
+            <p style="margin-top: 10px; color: #a0a0c0; font-size: 0.9rem;">Press Escape or click backdrop to close</p>
+          </div>
+
+          <div id="spatial-demo" class="demo-panel" style="display: none;">
+            <h2>🧭 Spatial Navigation (4 Corners)</h2>
+            <p style="color: #a0a0c0; margin-bottom: 20px;">Exit keyboard at boundaries to reach corner elements. Press arrow toward keyboard to return.</p>
+            <div class="input-group" style="max-width: 400px; margin: 0 auto 20px;">
+              <input type="text" id="spatial-input" placeholder="Type here..." readonly>
+            </div>
+            <div class="spatial-around-keyboard">
+              <div id="corner-top" class="corner-element" tabindex="0"><span>↑</span><small>Top</small></div>
+              <div id="corner-left" class="corner-element" tabindex="0"><span>←</span><small>Left</small></div>
+              <div id="keyboard-host-spatial" class="keyboard-host-box"></div>
+              <div id="corner-right" class="corner-element" tabindex="0"><span>→</span><small>Right</small></div>
+              <div id="corner-bottom" class="corner-element" tabindex="0"><span>↓</span><small>Bottom</small></div>
+            </div>
+          </div>
+
+          <div id="keyboard-host" style="margin-top: 30px;"></div>
+
+          <div id="demo-code-section" style="margin-top: 30px; padding-top: 30px; border-top: 2px solid #3d3d6b;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3 style="color: #a78bfa; font-size: 1.1rem; margin: 0;">💻 Code Example</h3>
+              <button id="copy-code-btn" class="btn" style="padding: 8px 16px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copy
+              </button>
+            </div>
+            <div class="code-block" id="demo-code-block">
+              <code id="demo-code-content">// Select a demo to see code</code>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="sidebar">
+        <section class="section" style="padding: 30px;">
+          <h3 style="color: #a78bfa; margin-bottom: 15px; font-size: 1.1rem;">📚 API Reference</h3>
+
+          <h4 style="color: #c4b5fd; margin: 15px 0 10px; font-size: 0.9rem;">⚙️ Configuration</h4>
+          <table class="api-table" style="font-size: 0.8rem; margin-bottom: 15px;">
+            <thead>
+              <tr><th>Option</th><th>Type</th><th>Default</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>layout</code></td><td>KeyboardLayout</td><td>qwerty</td><td>Key layout configuration</td></tr>
+              <tr><td><code>displayMode</code></td><td>'inline' | 'modal'</td><td>'inline'</td><td>Show inline or as overlay</td></tr>
+              <tr><td><code>maxLength</code></td><td>number</td><td>Infinity</td><td>Max input length allowed</td></tr>
+              <tr><td><code>allowEmpty</code></td><td>boolean</td><td>true</td><td>Allow empty input on Enter</td></tr>
+              <tr><td><code>theme</code></td><td>'light'|'dark'|'auto'</td><td>'auto'</td><td>Visual theme</td></tr>
+              <tr><td><code>focusColor</code></td><td>string</td><td>'#2196f3'</td><td>Focus ring color</td></tr>
+              <tr><td><code>zIndex</code></td><td>number</td><td>9999</td><td>Modal z-index</td></tr>
+              <tr><td><code>modalBackdrop</code></td><td>boolean</td><td>true</td><td>Click outside to close modal</td></tr>
+              <tr><td><code>containerClass</code></td><td>string</td><td>''</td><td>Custom CSS class</td></tr>
+              <tr><td><code>trapFocus</code></td><td>boolean</td><td>true</td><td>Prevent focus from leaving</td></tr>
+            </tbody>
+          </table>
+
+          <h4 style="color: #c4b5fd; margin: 15px 0 10px; font-size: 0.9rem;">📡 Events</h4>
+          <table class="api-table" style="font-size: 0.8rem; margin-bottom: 15px;">
+            <thead>
+              <tr><th>Event</th><th>Signature</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>onInput</code></td><td>(value, key) => void</td><td>Key pressed, value changed</td></tr>
+              <tr><td><code>onEnter</code></td><td>() => void</td><td>Enter key pressed</td></tr>
+              <tr><td><code>onClose</code></td><td>() => void</td><td>Modal closed (Escape/Back)</td></tr>
+              <tr><td><code>onEdgeExit</code></td><td>(direction) => void</td><td>Navigated beyond keyboard edge</td></tr>
+            </tbody>
+          </table>
+
+          <h4 style="color: #c4b5fd; margin: 15px 0 10px; font-size: 0.9rem;">🔧 Methods</h4>
+          <table class="api-table" style="font-size: 0.8rem;">
+            <thead>
+              <tr><th>Method</th><th>Params</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>show()</code></td><td>-</td><td>Show keyboard (modal)</td></tr>
+              <tr><td><code>hide()</code></td><td>-</td><td>Hide keyboard (modal)</td></tr>
+              <tr><td><code>focus()</code></td><td>-</td><td>Focus first key</td></tr>
+              <tr><td><code>blur()</code></td><td>-</td><td>Remove focus</td></tr>
+              <tr><td><code>setValue(val)</code></td><td>val: string</td><td>Set input value</td></tr>
+              <tr><td><code>disableKeys(arr)</code></td><td>arr: string[]</td><td>Disable keys by value</td></tr>
+              <tr><td><code>enableKeys(arr)</code></td><td>arr: string[]</td><td>Enable keys by value</td></tr>
+              <tr><td><code>disableAllKeysExcept(arr)</code></td><td>arr: string[]</td><td>Disable all except these keys</td></tr>
+              <tr><td><code>enableAllKeysExcept(arr)</code></td><td>arr: string[]</td><td>Enable all except these keys</td></tr>
+              <tr><td><code>destroy()</code></td><td>-</td><td>Clean up & remove</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </aside>
+    </div>
+  <script type="module" src="./demo.ts"></script>
+</body>
+</html>
